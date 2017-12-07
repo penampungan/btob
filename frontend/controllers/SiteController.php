@@ -72,7 +72,19 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+		/* Yii::$app->mailer->compose()
+		 ->setFrom('postman@lukison.com')
+		 ->setTo('piter@lukison.com')
+		 ->setSubject('Minggu - Email sent from Yii2-Swiftmailer')
+		 ->send(); */
+		if (\Yii::$app->user->isGuest) {
+            $model = new LoginForm();
+            return $this->render('indexNoLogin', [
+                'model' => $model,
+            ]);
+        } else {
+			return $this->render('index');
+		}
     }
 
     /**
@@ -90,8 +102,6 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            $model->password = '';
-
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -126,7 +136,7 @@ class SiteController extends Controller
             }
 
             return $this->refresh();
-        } else {
+        }else {
             return $this->render('contact', [
                 'model' => $model,
             ]);
@@ -162,8 +172,42 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
+		
     }
 
+	/**
+     * Ajax
+     * Signs user up.
+     * @return mixed
+     */
+    public function actionSignupFront()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+        return $this->renderAjax('signup', [
+            'model' => $model,
+        ]);
+	}
+	
+    /**
+     * Ajax
+     * Signs user up.
+     * @return mixed
+     */
+    public function actionHomeFront()
+    {
+        return $this->renderAjax('home');
+    }
+	
+	
+	
     /**
      * Requests password reset.
      *
