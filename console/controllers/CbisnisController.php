@@ -11,6 +11,29 @@ class ClientApiTestController extends Controller
 	//http://guzzle.readthedocs.io/en/latest/overview.html
     public function actionIndex()
     {
+		public $infoKelompok="GETINFOKELOMPOK";
+		public $infoProduk="GETINFOPRODUK";
+		public $bayar="H2HBAYAR";
+		public $inquery="H2HINQUIRY";
+		public $apikey="55c450f34a57c3160d5a8bf050f14068";
+		public $page="host2host-ppob";
+		
+		/**===========
+		 * EXAMPLE 1
+		 **===========
+		{
+		   "apikey":"55c450f34a57c3160d5a8bf050f14068",
+		   "page":"host2host-ppob",
+		   "function":"get-info-kelompok",
+		   "param":{
+				"memberid":"ZON13121710",
+				"tipe":"PRE"   
+			}
+			
+		}
+		*/
+		
+		
 		//=== CODE ===
 		//code 201=berhasil
 		//code 200=berhasil
