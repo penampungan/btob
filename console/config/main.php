@@ -28,10 +28,13 @@ return [
         ],
 		'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=10.10.99.99;dbname=kg',
+            'dsn' => 'mysql:host=192.168.212.100;dbname=kg',
             'username' => 'ppob',
             'password' => 'ppobssdjaja81',
             'charset' => 'utf8',
+        ],
+		'ppobh2h' =>[
+            'class'=>'console\components\PpobH2h',
         ],
     ],
     'params' => $params,
