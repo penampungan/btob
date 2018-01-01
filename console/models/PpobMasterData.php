@@ -42,8 +42,8 @@ class PpobMasterData extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TYPE_ID', 'PERMIT', 'STATUS'], 'integer'],
-            [['TYPE_NM'], 'required'],
+            [['PERMIT', 'STATUS'], 'integer'],
+            //[['TYPE_NM'], 'required'],
             [['NAME', 'KETERANGAN'], 'string'],
             [['DENOM', 'HARGA'], 'number'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],
@@ -60,7 +60,6 @@ class PpobMasterData extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'TYPE_ID' => 'Type  ID',
             'TYPE_NM' => 'Type  Nm',
             'KELOMPOK' => 'Kelompok',
             'KTG_ID' => 'Ktg  ID',

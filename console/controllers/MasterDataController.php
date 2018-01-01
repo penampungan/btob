@@ -77,51 +77,48 @@ class MasterDataController extends Controller
 	private function simpanDataProduk($allDataKelpmpok=[]){			
 		foreach($allDataKelpmpok as $row1 => $value1){
 			foreach($allDataKelpmpok[$row1] as $row2 => $value2){				
-				//$modelKtg= new PpobMasterKtg();
-				// $modelKtg->KTG_ID=(string)$value2['id'];
-				// $modelKtg->KTG_NM=(string)$value2['kategori'];
-				// $modelKtg->KELOMPOK=(string)$value2['kelompok'];
-				//$modelKtg->save();
-				// $dataKtg[]=$value2['id'];
-				// $dataKtg[]=$value2['kategori'];
-				// $dataKtg[]=$value2['kelompok'];
-				//$dataProduk[]=Yii::$app->ppobh2h->ArrayProduk($value2['id']);
-				$dataProduk[]=$value2['id'];
-				//$dataProduk[]=Yii::$app->ppobh2h->ArrayProduk('96');
-				// $dataProduk='';
-				// $dataProduk=Yii::$app->ppobh2h->ArrayProduk($value2['id']);
-				// $dataProduk[id] => 337
-                    // [kode] => TOP45P
-                    // [nama] => TV TOPAS Paket Pengetahuan
-                    // [denom] => 50000
-                    // [harga] => 45000
-                    // [permit] => 1
-
+				//$dataProduk[]=$value2['id'];
+				// if ($value2['id']=='96'){											// ==CHECK ONLY ONE KATEGORY
+					// $dataProduk=Yii::$app->ppobh2h->ArrayProduk('96');				// ==CHECK ONLY ONE KATEGORY
+					$dataProduk=Yii::$app->ppobh2h->ArrayProduk($value2['id']);
+					foreach($dataProduk as $row3 => $value3){
+						$model= new PpobMasterData();
+							//== TYPE KELOMPOK ==
+							$dataProdukDetail['TYPE_NM']=$value2['kelompok']=='PASCABAYAR'?$value2['kelompok']:'PRABAYAR';
+							//== GROUP KELOMPOK ==
+							$dataProdukDetail['KELOMPOK']=$value2['kelompok'];
+							//== KELOMPOK KATEGORY==
+							$dataProdukDetail['KTG_ID']=$value2['id'];
+							$dataProdukDetail['KTG_NM']=$value2['kategori'];						
+							//== DETAIL PRODUK ==
+							$dataProdukDetail['ID_CODE']=$value3['id'];
+							$dataProdukDetail['CODE']=$value3['kode'];
+							$dataProdukDetail['NAME']=$value3['nama'];
+							$dataProdukDetail['DENOM']=$value3['denom'];
+							$dataProdukDetail['HARGA']=$value3['harga'];
+							$dataProdukDetail['PERMIT']=$value3['permit'];
+						//== TYPE KELOMPOK ==
+						$model->TYPE_NM=(string)$value2['kelompok']=='PASCABAYAR'?$value2['kelompok']:'PRABAYAR';
+						//== GROUP KELOMPOK ==
+						$model->KELOMPOK=(string)$value2['kelompok'];
+						//== KELOMPOK KATEGORY==
+						$model->KTG_ID=(string)$value2['id'];
+						$model->KTG_NM=(string)$value2['kategori'];						
+						//== DETAIL PRODUK ==
+						$model->ID_CODE=(string)$value3['id'];
+						$model->CODE=(string)$value3['kode'];
+						$model->NAME=(string)$value3['nama'];
+						$model->DENOM=(string)$value3['denom'];
+						$model->HARGA=(string)$value3['harga'];
+						$model->PERMIT=(string)$value3['permit'];
+						$model->save();
+					}
+				//} // CHECK ONLY ONE KATEGORY
 			}
 		}		
-		return $dataProduk;
-	}	
-	
-	
-	
-	
-	
-	
-	
-		/* 
-			$groupKelompok[]="(".$row2.",".$value2[''].")";
-			//$groupKelompok[]=$row2.',12';
-			//			$groupKelompok[]='123';
-			//$modelGroupKelompok=PpobMasterKelompok::find()->where		
-		}  */
-		//$values  = "('".str_replace(',',"'),('",implode(',', $groupKelompok))."')";
-		//$values  = "('".str_replace(',',"'),('",implode(',', $groupKelompok))."')";
-		/* $sqlstr="
-			INSERT INTO ppob_master_kelompok(KELOMPOK) VALUES ".$values;
-		// Yii::$app->db->createCommand($sqlstr)->execute();
-		Yii::$app->db->createCommand($sqlstr)->execute();
-		//return $groupKelompok;		 */
-		
+		// return $dataProduk;
+		return $dataProdukDetail;
+	}			
 }
 
 ?>
