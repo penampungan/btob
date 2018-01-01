@@ -114,6 +114,71 @@ class PpobH2h extends Component{
 	}
 	
 	
+	/* ==========================================================================
+	 * ===============  H2H BAYAR ===============================================
+	 * CLI		:	Yii::$app->ppobh2h->ArrayBayar($produkId,$msisdn,$reff_id);
+	 * Authorby	: 	ptr.nov@gmail.com
+	 * ==========================================================================
+	*/	
+	public function ArrayBayar($produkId ='',$msisdn='', $reff_id='')
+    {
+		$client = new \GuzzleHttp\Client();
+		
+		// $param=[
+			// 'memberid'=>\Yii::$app->params['memberid'],
+			// 'produk'=>$produkId,
+		// ];
+		
+		$dataBody = [
+			"apikey"=>\Yii::$app->params['apikey'],
+			"page" =>\Yii::$app->params['page'],
+			"function" => \Yii::$app->params['bayar'],
+			"param" => [
+				'memberid'=>\Yii::$app->params['memberid'],
+				'produk'=>$produkId,
+				'msisdn'=>$msisdn,
+			],			
+		];
+		$res = $client->post(\Yii::$app->params['urlApi'], ['body' => json_encode($dataBody), 'future' => false]);
+		// echo $res->getStatusCode();
+		// echo $res->getBody();
+		$data=json_decode(json_encode(json_decode($res->getBody())->data),true);	
+		return $data;		
+	}
+	
+	/* ==========================================================================
+	 * ===============  H2H INQUIRY ===============================================
+	 * CLI		:	Yii::$app->ppobh2h->ArrayInquery($produkId,$idPelanggan);
+	 * Authorby	: 	ptr.nov@gmail.com
+	 * ==========================================================================
+	*/	
+	public function ArrayInquery($produkId ='',$idPelanggan='')
+    {
+		$client = new \GuzzleHttp\Client();
+		
+		// $param=[
+			// 'memberid'=>\Yii::$app->params['memberid'],
+			// 'produk'=>$produkId,
+		// ];
+		
+		$dataBody = [
+			"apikey"=>\Yii::$app->params['apikey'],
+			"page" =>\Yii::$app->params['page'],
+			"function" => \Yii::$app->params['inquery'],
+			"param" => [
+				'memberid'=>\Yii::$app->params['memberid'],
+				'produk'=>$produkId,
+				'id_pelanggan'=>$idPelanggan,
+			],			
+		];
+		$res = $client->post(\Yii::$app->params['urlApi'], ['body' => json_encode($dataBody), 'future' => false]);
+		// echo $res->getStatusCode();
+		// echo $res->getBody();
+		$data=json_decode(json_encode(json_decode($res->getBody())->data),true);	
+		return $data;		
+	}
+	
+	
 	public function actionKelompokPostpaid()
     {
 		//\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

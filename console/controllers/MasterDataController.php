@@ -19,8 +19,15 @@ class MasterDataController extends Controller
 	/*  
 	 * ACTION	: Uji Coba
 	*/
-	public function actionCoba(){		
-		$allDataKelpmpok=Yii::$app->ppobh2h->ArrayKelompokAllType();
+	public function actionCoba(){
+		//$result=Yii::$app->ppobh2h->ArrayBayar($produkId,$msisdn,$reff_id);
+		// $result=Yii::$app->ppobh2h->ArrayBayar('39','085883319929','');
+		// print_r($result);
+		//$result=Yii::$app->ppobh2h->ArrayBayar('50','14020296076');
+		$result=Yii::$app->ppobh2h->ArrayInquery('163','12345678');
+		print_r($result);
+		
+		//$allDataKelpmpok=Yii::$app->ppobh2h->ArrayKelompokAllType();
 		//print_r($allDataKelpmpok);
 		//[2]==== GET ARRAY KELOMPOK ====
 		// foreach($allDataKelpmpok as $row2 => $value2){
@@ -191,35 +198,35 @@ class MasterDataController extends Controller
 	 *		- HARGA		: Harga PT.SIBINSIS.
 	 *		- PERMIT	: 0=Layanan Tidak  tersedia/deactve; 1=Layanan Tersedia 
 	 *  TABLE	: => ppob_master_harga
-	 *		- DENOM			: Nominal pembelian
-	 *		- HARGA_BARU	: Harga update dari PT.SIBINSIS.
-	 *		- HARGA			: Harga yang akan diupdate dari harga beru, berdasarkan tanggal aktiv.
-     *						  jika masuk ke Tanggal Aktive, maka HARGA_BARU dicopy ke HARGA
-     *		- HARGA_JUAL	: Harga yang sudah di tetapkan oleh PT.KONTROLGAMPANG, menyesuaikan harga pasar.
-     *		- FEE_KG		: PENETAPKAN KEUNTUNGAN DARI (HARGA JUAL - HARGA), SHARE (FEE_KG & FEE_MEMBER).
-	 *		- FEE_MEMBER	: PENETAPKAN KEUNTUNGAN DARI (HARGA JUAL - HARGA), SHARE (FEE_KG & FEE_MEMBER).	
-	 *		- STATUS		: 0=Deactivate; 1=Active; 2=New Price
+	 *		- DENOM				: Nominal pembelian
+	 *		- HARGA_BARU		: Harga update dari PT.SIBINSIS.
+	 *		- HARGA_DASAR		: Harga yang akan diupdate dari harga beru, berdasarkan tanggal aktiv.
+     *						  	  jika masuk ke Tanggal Aktive, maka HARGA_BARU dicopy ke HARGA
+     *		- HARGA_JUAL		: Harga yang sudah di tetapkan oleh PT.KONTROLGAMPANG, menyesuaikan harga pasar.
+     *		- MARGIN_FEE_KG		: PENETAPKAN KEUNTUNGAN DARI (HARGA JUAL - HARGA), SHARE (FEE_KG & FEE_MEMBER).
+	 *		- MARGIN_FEE_MEMBER	: PENETAPKAN KEUNTUNGAN DARI (HARGA JUAL - HARGA), SHARE (FEE_KG & FEE_MEMBER).	
+	 *		- STATUS			: 0=Deactivate; 1=Active; 2=New Price
 	 * ACTION FORM :
-	 * - Jika ada perbedaan harga-baru dan harga maka			: ppob_master_harga.STATUS=2
-	 * - Jika sudah di update berdasarkan Tanggal Active maka	: ppob_master_harga.STATUS=1				=> TRIGER POLLING
-	 * - FEE_KG & FEE_MEMBER berdasarkan nominal rupiah			: Pembagian dari sisa (HARGA JUAL - HARGA)
-	 * - FEE_KG & FEE_MEMBER berdasarkan nominal rupiah			: Pembagian dari sisa (HARGA JUAL - HARGA)
-	 * - Ketersediaan Layanan produk							: Copy PERMIT to ppob_master_harga.STATUS	=> TRIGET POLLING
+	 * - Jika ada perbedaan harga-baru dan harga maka					: ppob_master_harga.STATUS=2
+	 * - Jika sudah di update berdasarkan Tanggal Active maka			: ppob_master_harga.STATUS=1				=> TRIGER POLLING
+	 * - MARGIN_FEE_KG & MARGIN_FEE_MEMBER berdasarkan nominal rupiah	: Pembagian dari sisa (HARGA JUAL - HARGA_DASAR)
+	 * - MARGIN_FEE_KG & MARGIN_FEE_MEMBER berdasarkan nominal rupiah	: Pembagian dari sisa (HARGA JUAL - HARGA_DASAR)
+	 * - Ketersediaan Layanan produk									: Copy PERMIT to ppob_master_harga.STATUS	=> TRIGET POLLING
 	 *  @author ptrnov  <piter@lukison.com>
 	 *  @since 1.1 
 	*/
 	private function UpdateHargaProduk(){
 		$sqlstr="
 			INSERT INTO ppob_master_harga(
-				ID_PRODUK,TYPE_NM,KELOMPOK,KTG_ID,KTG_NM,ID_CODE,CODE,NAME,DENOM,HARGA,HARGA_BARU,FUNGSI,PERMIT,STATUS
+				ID_PRODUK,TYPE_NM,KELOMPOK,KTG_ID,KTG_NM,ID_CODE,CODE,NAME,DENOM,HARGA_DASAR,HARGA_BARU,FUNGSI,PERMIT,STATUS
 			)
 			SELECT 
-				ID_PRODUK,TYPE_NM,KELOMPOK,KTG_ID,KTG_NM,ID_CODE,CODE,NAME,DENOM,HARGA,HARGA_BARU,FUNGSI,PERMIT,PERMIT AS STATUS	
+				ID_PRODUK,TYPE_NM,KELOMPOK,KTG_ID,KTG_NM,ID_CODE,CODE,NAME,DENOM,HARGA_DASAR,HARGA_BARU,FUNGSI,PERMIT,PERMIT AS STATUS	
 			FROM
 			(	SELECT 
 				(CASE WHEN x2.ID_PRODUK IS NOT NULL THEN x2.ID_PRODUK ELSE x1.ID_PRODUK END) AS ID_PRODUK,
-			  x1.TYPE_NM,x1.KELOMPOK,x1.KTG_ID,x1.KTG_NM,x1.ID_CODE,x1.CODE,x1.NAME,x1.DENOM,
-				x1.HARGA,	x1.HARGA AS HARGA_BARU,
+			    x1.TYPE_NM,x1.KELOMPOK,x1.KTG_ID,x1.KTG_NM,x1.ID_CODE,x1.CODE,x1.NAME,x1.DENOM,
+				x1.HARGA AS HARGA_DASAR,x1.HARGA AS HARGA_BARU,
 				x1.FUNGSI,x1.PERMIT,x1.PERMIT AS STATUS		
 				FROM ppob_master_data x1 LEFT JOIN ppob_master_harga x2 ON x2.ID_PRODUK=x1.ID_PRODUK
 			) a1
@@ -234,7 +241,11 @@ class MasterDataController extends Controller
 	1. Uapdate harga, apakah langsung update di api? jika iya apakah ada periode/manual confirmasi ?
     2. Apakah upadate harga secara keseluruhan/per-produck.
     3. Apakah POSTPAID/PASCABAYAR saja yang inquery.
-    4. 	
+    4. Keuntungan/margin dari paskabayar ?	
+	5. PLN pulsa, tidak ada nama dari pelanggan.
+	6. Status code, berhasil/tidak?  pulsa atau paket sampai ke konsumen langsung.
+	7. apakah history bisa di panggil per-transaksi, untuk validasi (berhasil/tidak).
+    8. VSN /Virtual Serial Number/ Token, apa masksudunya ?	
 	
 	*/
 }
