@@ -44,7 +44,7 @@ class PpobMasterData extends \yii\db\ActiveRecord
         return [
             [['PERMIT', 'STATUS'], 'integer'],
             //[['TYPE_NM'], 'required'],
-            [['NAME', 'KETERANGAN'], 'string'],
+            [['ID_PRODUK','NAME', 'KETERANGAN'], 'string'],
             [['DENOM', 'HARGA'], 'number'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['TYPE_NM', 'KELOMPOK', 'KTG_NM'], 'string', 'max' => 255],
@@ -59,7 +59,7 @@ class PpobMasterData extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID' => 'ID',
+            'ID_PRODUK' => 'ID_PRODUK',
             'TYPE_NM' => 'Type  Nm',
             'KELOMPOK' => 'Kelompok',
             'KTG_ID' => 'Ktg  ID',
