@@ -41,8 +41,8 @@ class MasterDataController extends Controller
 	public function actionUpdateGroupKelompok(){
 		$allDataKelpmpok=Yii::$app->ppobh2h->ArrayKelompokAllType();
 		$rslt=self::simpanGroupKelompok($allDataKelpmpok);
-		//print_r($rslt);
-		return $rslt;
+		print_r($rslt);
+		// return $rslt;
 	}
 	
 	/*  
@@ -100,17 +100,21 @@ class MasterDataController extends Controller
 	 *  @author ptrnov  <piter@lukison.com>
 	 *  @since 1.1 
 	*/
-	private function simpanKategoriKelompok($allDataKelpmpok=[]){			
+	private function simpanKategoriKelompok($allDataKelpmpok=[]){
+		$dataKtg='';
 		foreach($allDataKelpmpok as $row1 => $value1){
-			foreach($allDataKelpmpok[$row1] as $row2 => $value2){				
-				$modelKtg= new PpobMasterKtg();
-				$modelKtg->KTG_ID=(string)$value2['id'];
-				$modelKtg->KTG_NM=(string)$value2['kategori'];
-				$modelKtg->KELOMPOK=(string)$value2['kelompok'];
-				$modelKtg->save();
-				$dataKtg[]=$value2['id'];
-				$dataKtg[]=$value2['kategori'];
-				$dataKtg[]=$value2['kelompok'];
+			foreach($allDataKelpmpok[$row1] as $row2 => $value2){	
+				$modalKtgValidasi=PpobMasterKtg::find()->where(['KTG_ID'=>$value2['id']])->one();
+				if(!$modalKtgValidasi){
+					$modelKtg= new PpobMasterKtg();
+					$modelKtg->KTG_ID=(string)$value2['id'];
+					$modelKtg->KTG_NM=(string)$value2['kategori'];
+					$modelKtg->KELOMPOK=(string)$value2['kelompok'];
+					$modelKtg->save();
+					$dataKtg[]=$value2['id'];
+					$dataKtg[]=$value2['kategori'];
+					$dataKtg[]=$value2['kelompok'];
+				}
 			}
 		}		
 		return $dataKtg;
@@ -180,6 +184,7 @@ class MasterDataController extends Controller
 							$model->DENOM=(string)$value3['denom'];
 							$model->HARGA=(string)$value3['harga'];
 							$model->PERMIT=(string)$value3['permit'];
+							$model->FUNGSI=(string)$value3['permit'];
 							$model->save();
 						}
 							
